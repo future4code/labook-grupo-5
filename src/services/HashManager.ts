@@ -9,7 +9,7 @@ export class HashManager {
         return result;
     }
 
-    public async comprare(plaintext:string, hash:string): Promise <boolean> {
+    public async compare(plaintext:string, hash:string): Promise <boolean> {
         const result = await bcrypt.compare(plaintext, hash)
 
         return result;
