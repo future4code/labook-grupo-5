@@ -5,7 +5,7 @@ import Knex from "knex";
 dotenv.config();
 
 export abstract class BaseDataBase {
-    // abstract tableName: string;
+   
     private static KNEX_CONNECTION: Knex | null = null;
     protected static COMMENTS_TABLE_NAME = "labook5_comments";
     protected static FRIENDSHIP_TABLE_NAME = "labook5_friendship";
