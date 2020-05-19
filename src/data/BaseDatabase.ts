@@ -12,6 +12,7 @@ export abstract class BaseDataBase {
     protected static REFRESHTOKEN_TABLE_NAME = "labook5_refreshtoken";
     protected static POST_TABLE_NAME = "labook5_posts";
     protected static USER_TABLE_NAME = "labook5_users";
+    protected static LIKES_TABLE_NAME = "labook5_likes";
 
     protected getConnection() {
         if (BaseDataBase.KNEX_CONNECTION === null) {
