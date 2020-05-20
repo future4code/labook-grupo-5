@@ -14,7 +14,7 @@ export class FeedController extends BaseDataBase {
       if (!userData) {
         throw new Error("Falha na autenticação.")
       }
-      const feedDatabase = await new FeedDatabase().takeFriendshipById(userId)
+      const feedDatabase = await new FeedDatabase().showFeed(userId)
 
       res.status(200).send(feedDatabase)
 

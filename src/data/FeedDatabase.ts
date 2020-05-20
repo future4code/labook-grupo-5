@@ -2,7 +2,7 @@ import { BaseDataBase } from "../data/BaseDatabase";
 
 export class FeedDatabase extends BaseDataBase {
 
-  public async takeFriendshipById(id: string): Promise<any> {
+  public async showFeed(id: string): Promise<any> {
     const userAResult = await super.getConnection().raw(`
     SELECT
           user_creator,
