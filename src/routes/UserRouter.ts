@@ -6,8 +6,9 @@ export const userRouter = express.Router();
 
 userRouter.post("/signup", new UserController().signup);
 userRouter.post("/login", new UserController().login);
+userRouter.post("/refresh/token", new UserController().refreshToken);
 
 
 // Follow routes
-userRouter.post("/friendship", new FriendshipController().addFriend)
+userRouter.post("/friendship", new FriendshipController().addFriend);
 
