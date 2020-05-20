@@ -9,6 +9,7 @@ userRouter.post("/signup", new UserController().signup);
 userRouter.post("/login", new UserController().login);
 userRouter.post("/refresh/token", new UserController().refreshToken);
 userRouter.get("/feed", new FeedController().showFeed);
+userRouter.get("/feed/type", new FeedController().showFeedByType);
 
 
 // Follow routes
