@@ -1,18 +1,19 @@
-import { BaseDataBase } from "./BaseDatabase";
+import { Request, Response } from "express";
+import { BaseDataBase } from "../data/BaseDatabase";
+import { FeedController } from "../controller/FeedController";
 
-export class FeedDatabase extends BaseDataBase {
-  public async takeFriendshipById(id: string): Promise<any> {
-    const result = await super.getConnection().raw(`
-    SELECT
-			     *
-           FROM labook5_posts
-           LEFT JOIN labook5_friendship ON labook5_posts.user_creator = labook5_friendship.user_b_id
-           WHERE
-           labook5_friendship.user_a_id = '${id}';
-    `)
+export const FeedDatabase = async (req: Request, res: Response) => {
+  try {
+    const userId = req.query.id as string
+    const auth = req.headers.Authorization
 
-    console.log(result[0])
-    return result[0]
+    const feedController = await new FeedController().takeFriendshipById(userId)
+
+    res.status(200).send(feedController)
+
+  } catch (err) {
+    res.status(400).send({ err: err })
+  } finally {
+    await BaseDataBase.destroyConnection();
   }
 }
-
