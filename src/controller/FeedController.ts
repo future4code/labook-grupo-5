@@ -1,17 +1,27 @@
 import { BaseDataBase } from "../data/BaseDatabase"
+import { Request, Response } from 'express'
+import { FeedDatabase } from "../data/FeedDatabase"
+import { Authenticator } from "../services/Authenticator"
 
 export class FeedController extends BaseDataBase {
-  public async takeFriendshipById(id: string): Promise<any> {
-    const result = await super.getConnection().raw(`
-    SELECT
-			     *
-           FROM labook5_posts
-           LEFT JOIN labook5_friendship ON labook5_posts.user_creator = labook5_friendship.user_b_id
-           WHERE
-           labook5_friendship.user_a_id = '${id}';
-    `)
 
-    console.log(result[0])
-    return result[0]
+  async showFeed(req: Request, res: Response) {
+    try {
+      const userId = req.query.id as string
+      const token = req.headers.authorization as string
+      const userData = await new Authenticator().verify(token);
+      
+      if (!userData) {
+        throw new Error("Falha na autenticação.")
+      }
+      const feedDatabase = await new FeedDatabase().takeFriendshipById(userId)
+
+      res.status(200).send(feedDatabase)
+
+    } catch (err) {
+      res.status(400).send( err.message )
+    } finally {
+      await BaseDataBase.destroyConnection();
+    }
   }
 }
