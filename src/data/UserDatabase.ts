@@ -12,10 +12,8 @@ export class UserDatabase extends BaseDataBase{
     public async login(email: string): Promise <any> {
         const user = await super.getConnection().raw(`
             SELECT * FROM ${BaseDataBase.USER_TABLE_NAME} WHERE email = '${email}'
-        `)
+        `)       
 
         return user[0][0]        
-    }
-
     }
 }
