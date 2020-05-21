@@ -7,14 +7,13 @@ export class FeedController extends BaseDataBase {
 
   async showFeed(req: Request, res: Response) {
     try {
-      const userId = req.query.id as string
       const token = req.headers.authorization as string
       const userData = await new Authenticator().verify(token);
       
       if (!userData) {
         throw new Error("Falha na autenticação.")
       }
-      const feedDatabase = await new FeedDatabase().showFeed(userId)
+      const feedDatabase = await new FeedDatabase().showFeed(userData.id)
 
       res.status(200).send(feedDatabase)
 
@@ -35,7 +34,6 @@ export class FeedController extends BaseDataBase {
       }
       const token = req.headers.authorization as string
       const userData = await new Authenticator().verify(token);
-      const userId = req.query.id as string
       const postType = req.query.type as string
 
       if (!userData) {
@@ -48,7 +46,7 @@ export class FeedController extends BaseDataBase {
         throw new Error("Apenas eventos do tipo 'evento' ou 'normal' são permitidos.")
       }
       
-      const feedDatabase = await new FeedDatabase().filterType(userId, postType)
+      const feedDatabase = await new FeedDatabase().filterType(userData.id, postType)
 
       res.status(200).send(feedDatabase)
       
