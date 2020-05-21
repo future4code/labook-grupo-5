@@ -76,4 +76,27 @@ export class PostController {
             await BaseDataBase.destroyConnection();
         }
     }
+
+    async comment(req: Request, res: Response) {
+        try {
+            const postId = req.query.postId as any
+            const comment = req.body.comment as string
+            const token = req.headers.authorization as string;
+            const commentId = 0
+
+            if (!comment) {
+                throw new Error("Favor preencher o campo 'Comentário'.")
+            }
+
+            const userData = new Authenticator().verify(token);
+            await new PostDatabase().postComment(userData.id, postId, commentId, comment)
+
+            res.status(200).send("Comentario postado com sucesso!")
+
+        } catch (err) {
+            res.status(400).send(err.message)
+        } finally {
+            await BaseDataBase.destroyConnection();
+        }
+    }
 }
