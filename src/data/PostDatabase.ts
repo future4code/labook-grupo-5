@@ -32,5 +32,14 @@ export class PostDatabase extends BaseDataBase {
         WHERE user_id = "${user}" AND post_id = ${post}
             `)
     }
+
+    async postComment(userId: string, postId: any, commentId: number, comment: string): Promise<any> {
+        await super.getConnection().raw(`
+        INSERT INTO ${BaseDataBase.COMMENTS_TABLE_NAME}
+        (creator_id, post_id, comment_id, comment) 
+        VALUES ("${userId}", ${postId}, "${commentId}", "${comment}");
+
+        `)
+    }
 }
 
