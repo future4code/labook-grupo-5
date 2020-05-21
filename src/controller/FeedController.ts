@@ -26,9 +26,6 @@ export class FeedController extends BaseDataBase {
 
   async showFeedByType(req: Request, res: Response) {
     try {
-      if (!req.query.id) {
-        throw new Error("Favor preencher o campo 'id'.")
-      }
       if (!req.query.type) {
         throw new Error("Favor preencher o campo 'tipo'.")        
       }
@@ -48,8 +45,11 @@ export class FeedController extends BaseDataBase {
       
       const feedDatabase = await new FeedDatabase().filterType(userData.id, postType)
 
-      res.status(200).send(feedDatabase)
-      
+        if (feedDatabase.length === 0) {
+          throw new Error(`Não há resultados para o filtro "${postType}".`)
+        }
+
+        res.status(200).send(feedDatabase)
     } catch (err) {
       res.status(400).send( err.message )
     } finally {
