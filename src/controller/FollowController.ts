@@ -31,4 +31,26 @@ export class FriendshipController {
             await BaseDataBase.destroyConnection()
         }
     }
+
+    async deleteFriend(req: Request, res: Response) {
+        try {
+            const followerToken = req.headers.authorization as string
+            const unfollowedId = req.body.userToUnfollowId
+
+            if(!unfollowedId || !followerToken) {
+                throw new Error ("Dados inválidos")
+            }
+
+            const followerId = new Authenticator().verify(followerToken)
+            await new UserConnectionDB().unfollow(followerId.id, unfollowedId)
+
+
+        } catch (err) {
+            res.status(400).send({ message: err.message })
+        }
+
+        finally {
+            await BaseDataBase.destroyConnection()
+        }
+    }
 }

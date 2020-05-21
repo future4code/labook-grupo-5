@@ -12,4 +12,11 @@ export class UserConnectionDB extends BaseDataBase {
         .into(this.tableName)
     }
     
+    public async unfollow(followedId: string, followerId: string): Promise<void> {
+        await this.getConnection()
+        .delete()
+        .from(this.tableName)
+        .where({user_b_id:followedId})
+        .andWhere({user_a_id: followerId})
+    }
 }

@@ -9,4 +9,4 @@ userRouter.post("/signup", new UserController().signup);
 
 // Follow routes
 userRouter.post("/friendship", new FriendshipController().addFriend)
-
+userRouter.post("/undofrienship", new FriendshipController().deleteFriend)
