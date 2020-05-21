@@ -13,5 +13,5 @@ userRouter.get("/feed/type", new FeedController().showFeedByType);
 
 
 // Follow routes
-userRouter.post("/friendship", new FriendshipController().addFriend);
-
+userRouter.post("/friendship", new FriendshipController().addFriend)
+userRouter.post("/undofrienship", new FriendshipController().deleteFriend)
