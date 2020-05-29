@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { BaseDataBase } from "../data/BaseDatabase";
 import { Authenticator } from "../services/Authenticator";
 import { PostDatabase } from "../data/PostDatabase";
+import { PostBusiness } from "../business/PostBusiness";
 
 export class PostController {
 
@@ -96,6 +97,21 @@ export class PostController {
         } catch (err) {
             res.status(400).send(err.message)
         } finally {
+            await BaseDataBase.destroyConnection();
+        }
+    }
+
+    async getPostsByType(req: Request, res: Response) {
+        const postType = req.query.type as string
+
+        try{
+            const result = await new PostBusiness().getPostsByType(PostBusiness.mapStringToPostType(postType)) 
+            
+            res.status(200).send({result})
+
+        }catch(err){
+            res.status(400).send(err.message)
+        }finally {
             await BaseDataBase.destroyConnection();
         }
     }

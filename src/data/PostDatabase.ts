@@ -1,4 +1,5 @@
 import { BaseDataBase } from "./BaseDatabase";
+import { PostType, Post } from "../model/Post";
 
 export class PostDatabase extends BaseDataBase {
 
@@ -33,7 +34,7 @@ export class PostDatabase extends BaseDataBase {
             `)
     }
 
-    async postComment(userId: string, postId: any, commentId: number, comment: string): Promise<any> {
+    public async postComment(userId: string, postId: any, commentId: number, comment: string): Promise<any> {
         await super.getConnection().raw(`
         INSERT INTO ${BaseDataBase.COMMENTS_TABLE_NAME}
         (creator_id, post_id, comment_id, comment) 
@@ -41,5 +42,20 @@ export class PostDatabase extends BaseDataBase {
 
         `)
     }
-}
 
+    public async getPostsByType(postType: PostType): Promise<Post[]>{
+        const result = await super.getConnection()
+        .select("*")
+        .from(BaseDataBase.POST_TABLE_NAME)
+        .where({type: postType})
+
+        const postsArray: Array<Post> = [];
+
+        for(let post of result){
+            const newPost = new Post(post.id,post.user_creator, post.picture, post.description, post.creation_date, post.type)
+            postsArray.push(newPost)
+        }
+
+        return postsArray;
+    }
+}
