@@ -1,6 +1,6 @@
 import express from "express";
 import { UserController } from "../controller/UserController";
-import { FriendshipController } from "../controller/FollowController"
+import { FriendshipController } from "../controller/FriendshipController"
 import { FeedController } from "../controller/FeedController";
 
 export const userRouter = express.Router();

@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import { BaseDataBase } from '../data/BaseDatabase'
-import { UserConnectionDB } from '../data/UserConnectionDB'
+import { FriendshipDatabase } from '../data/FriendshipDatabase'
+import { FriendshipBusiness } from '../business/FriendshipBussiness'
 import { Authenticator } from '../services/Authenticator'
 
 
@@ -11,25 +12,22 @@ export class FriendshipController {
             const followerToken = req.headers.authorization as string
             const followedId = req.body.followedId
 
-            const userConnectionDB = new UserConnectionDB()
+            const authenticator = new Authenticator()
+            const followerId = authenticator.verify(followerToken)
 
             if (!followedId || !followerToken || followedId === "") {
                 throw new Error("Dados de usuário inválidos")
             }
 
-            const authenticator = new Authenticator()
-            const followerId = authenticator.verify(followerToken)
-
-            await userConnectionDB.follow(followerId.id, followedId)
-
-            res.status(200).send({ message: "PARABÉNS, você tem um novo amigo!" })
+            const friendshipBusiness = new FriendshipBusiness()
+            friendshipBusiness.follow(followerId.id, followedId)
+                .then((result) => {
+                    res.status(200).send({ message: "PARABÉNS, você tem um novo amigo!", result })
+                    BaseDataBase.destroyConnection()
+                }).catch((err) => { res.status(400).send({ message: err.message }) })
 
         } catch (err) {
             res.status(400).send({ message: err.message })
-        }
-
-        finally {
-            await BaseDataBase.destroyConnection()
         }
     }
 
@@ -43,7 +41,7 @@ export class FriendshipController {
             }
 
             const followerId = new Authenticator().verify(followerToken)
-            await new UserConnectionDB().unfollow(followerId.id, unfollowedId)
+            await new FriendshipBusiness().unfollow(followerId.id, unfollowedId)
 
             res.status(200).send({ message: "Amizade desfeita!" })
 
